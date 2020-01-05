@@ -1,0 +1,103 @@
+git版本的创建与回退
+版本的创建
+git init  用git来管理当前的文件目录
+
+	1. 编辑一个文件
+	2. git add a.txt
+	3. git commit -m '版本的说明'
+
+版本的回退
+1.将版本回退到上一个版本
+git reset -hard HEAD~1   回退到上上个版本，将1改成2
+2.将版本返回到前一个版本
+git rest -hard HEAD 版本序列号(只需要取序列号的前面几位)
+3.版本序列号的的查看
+如果当前是版本2，通过git log可以看到前面的版本1，但是要看到版本3，必须要看之前的日志，使用git reflog
+版本记录简短显示  git log --pretty=oneline
+
+工作区、暂存区、版本区
+通过git add将工作区的修改放到暂存区
+通过git commit -m ‘’将暂存区的修改放到版本区
+
+通过git status 查看当前工作区有哪些修改的文件没有放到暂存区
+将工作区的修改进行取消  git checkout -- 文件
+取消暂存区的修改  git reset HEAD 文件    再将工作区的文件丢弃 git checkout -- 文件
+
+对比文件的不同
+       对比工作区和版本区文件的不同
+
+	* git diff HEAD -- code.txt   ---代表的是HEAD  +++代表的是工作区
+
+       对比两个版本文件的不同
+
+	* git diff HEAD HEAD^  -- code.txt     或者git diff HEAD HEAD~1  -- code.txt 对比文件的不同
+
+直接使用版本序列号进行版本的对比
+
+删除文件
+将工作区的文件删除 git checkout -- 文件    将删除的文件进行恢复，恢复的是当前版本中的文件，已经修改但是没有创建版本的文件无法恢复了
+git rm 文件
+git commit -m 提交一个删除文件的版本
+
+
+分支的创建，切换分支
+git checkout -b dev  创建并切换分支   HEAD指向分支  分支指向版本
+git checkout master 切换回master分支
+将dev分支的内容合并到master分支上  
+git merge dev快速合并，将master的指针指到dev
+删除分支
+git branch 查看当前分支
+git branch dev 创建分支
+git branch -d dev 删除分支
+
+分支合并的冲突
+当dev分支有了新的提交，master也有了新的提交在同一个文件
+git log --graph --pertty=oneline  查看分支的图
+git merge master失败（将master分支合并过来） 将相同的文件进行编辑，然后再add commit 提交
+删除dev分支 git branch -d dev 
+
+如果合并的时候dev分支修改了文件，master修改了另外一个文件
+不能执行快速合并，一般合并的时候禁用快速合并
+git merge --no-ff -m '禁用快速合并' dev 将分支进行合并之后进行一次新的提交
+
+保存工作现场 git stash 
+显示工作现场 git stash list
+恢复工作现场 git stash pop
+
+修复临时bug
+在dev分支工作时，先git stash 保存现场
+
+再git checkout master  然后再git checkout -b bug001
+然后改完bug后,将
+
+将本地分支推送到github
+git push origin 本地分支
+origin代表的就是远程分支
+
+跟踪远程的分支
+可以看到本地分支和远程分支的不同
+git branch --set-upstream-to=origin/dev 本地分支dev
+再推送到远程分支的时候直接
+git push即可
+
+git status可以看本地和远程分支的差异
+
+从远程分支上拉取代码
+git pull orgin 分支名称
+
+工作中使用git
+项目经理搭建框架，放在服务器
+在自己的电脑上生成公钥，将公钥交给项目经理，项目经理把公钥放到服务器上
+项目经理会给每个组员的项目代码的地址，组员把代码下载到自己的电脑上
+创建本地的分支dev，在dev分支中进行每天的开发（在自己的电脑上进行开发）
+每一个员工开发完自己的代码之后，都需要将代码发布到远程的dev分支上（必须完整的开发完之后再放到dev分支，）
+
+
+
+
+
+
+
+
+
+
